@@ -1,9 +1,8 @@
 
-
 function App() {
   return (
     <>
-      <h1>Kanban Board</h1>
+      <h1 style={{ color: 'red' }}>Kanban Board</h1>
     </>
   );
 }
