@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  font-size: 16px;
+  font-family: Helvetica, Arial, sans-serif;;
+  background-color: #fff;
+  color: #fff;
+  overscroll-behavior: none;
+}
+
+html.fixed {
+  position: fixed;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+a,
+em {
+  text-decoration: none;
+  font-style: normal;
+
+  &:-webkit-any-link:focus-visible {
+    outline: 0;
+  }
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  cursor: pointer;
+}
