@@ -1,9 +1,11 @@
+import Board from './components/kanban/Board/Board';
+import Layout from './components/layout/Layout/Layout';
 
 function App() {
   return (
-    <>
-      <h1 style={{ color: 'red' }}>Kanban Board</h1>
-    </>
+    <Layout>
+      <Board />
+    </Layout>
   );
 }
 

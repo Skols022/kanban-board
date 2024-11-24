@@ -26,6 +26,7 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
+    "types.d.ts", 
     "src/**/*.ts",
     "src/**/*.tsx",
   ]
