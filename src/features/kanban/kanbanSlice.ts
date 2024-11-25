@@ -1,7 +1,6 @@
-import { UniqueIdentifier } from '@dnd-kit/core';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface KanbanState {
-  [key: string]: Ticket[];
+  [key: string]: Task[];
 }
 
 const initialState: KanbanState = {
@@ -20,7 +19,7 @@ const kanbanSlice = createSlice({
   name: 'kanban',
   initialState,
   reducers: {
-    moveTicket: (
+    moveTask: (
       state,
       action: PayloadAction<{
         sourceColumn: string;
@@ -38,21 +37,21 @@ const kanbanSlice = createSlice({
         return;
       }
 
-      const sourceTickets = state[sourceColumn];
-      const destinationTickets = state[destinationColumn];
+      const sourceTasks = state[sourceColumn];
+      const destinationTasks = state[destinationColumn];
 
       // Handle cross-column movement
       if (sourceColumn !== destinationColumn) {
-        const [movedTicket] = sourceTickets.splice(oldIndex, 1); // Remove from source column
-        destinationTickets.splice(newIndex, 0, movedTicket); // Add to destination column
+        const [movedTask] = sourceTasks.splice(oldIndex, 1); // Remove from source column
+        destinationTasks.splice(newIndex, 0, movedTask); // Add to destination column
       } else {
         // Reorder within the same column
-        const [movedTicket] = sourceTickets.splice(oldIndex, 1); // Remove ticket
-        sourceTickets.splice(newIndex, 0, movedTicket); // Add at new index
+        const [movedTask] = sourceTasks.splice(oldIndex, 1); // Remove Task
+        sourceTasks.splice(newIndex, 0, movedTask); // Add at new index
       }
     },
   },
 });
 
-export const { moveTicket } = kanbanSlice.actions;
+export const { moveTask } = kanbanSlice.actions;
 export default kanbanSlice.reducer;

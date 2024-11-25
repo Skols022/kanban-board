@@ -1,7 +1,7 @@
 declare module 'path';
 declare module 'url';
 
-interface Ticket {
+interface Task {
   id: string;
   content: string;
 }

@@ -1,9 +1,11 @@
 import { ReactNode } from 'react';
 
+import Header from '../Header/Header';
+
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <header>Search</header>
+      <Header />
       <main>{children}</main>
     </>
   );
