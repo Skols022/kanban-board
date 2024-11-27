@@ -11,31 +11,46 @@
   margin-bottom: 0.625rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   cursor: grab;
-  
+
+  @media (--tablet-main) {
+    touch-action: none;
+  }
+
   &:hover {
     span {
       button {
         display: block;
+
+        &:first-child {
+          display: none;
+
+          @media (--tablet-main) {
+            display: block;
+            margin-right: 0.75rem;
+          }
+        }
       }
     }
   }
 
   .deleteButtonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     width: 100%;
 
     button {
       display: none;
-      margin-left: auto;
     }
-  }
 
-  .content {
-    font-weight: 400;
-    text-align: center;
-  }
+    .content {
+      font-weight: 400;
+      text-align: center;
+    }
 
-  .editButtonWrapper {
-    display: flex;
-    gap: 0.75rem
+    .editButtonWrapper {
+      display: flex;
+      gap: 0.75rem;
+    }
   }
 }

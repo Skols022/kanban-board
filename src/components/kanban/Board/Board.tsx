@@ -6,6 +6,7 @@ import {
   DragOverEvent,
   DragStartEvent,
   PointerSensor,
+  TouchSensor,
   closestCorners,
   useSensor,
   useSensors,
@@ -15,6 +16,8 @@ import { useDebouncedCallback } from 'use-debounce';
 import { RootState } from '@/app/store';
 import { moveTask } from '@/features/kanban/kanbanSlice';
 import styles from './Board.module.css';
+import LoadingSpinner from '@/components/ui/LoadingSpinner/LoadingSpinner';
+import { useBreakpoint } from '@/hooks/useBreakPoint';
 
 const Column = lazy(() => import('../Column/Column'));
 const TaskCard = lazy(() => import('../TaskCard/TaskCard'));
@@ -31,18 +34,21 @@ interface ActiveTaskProps extends Task {
 
 const Board: FC = () => {
   const dispatch = useDispatch();
-  const kanban = useSelector((state: RootState) => state.kanban);
+  const { tabletMain } = useBreakpoint();
+  const { columns } = useSelector((state: RootState) => state.kanban);
   const dragContext = useMemo(() => {
-    return Object.keys(kanban).map((columnId) => ({
+    return Object.keys(columns).map((columnId) => ({
       columnId: columnId as columnId,
-      tasks: kanban[columnId as columnId],
+      tasks: columns[columnId as columnId],
     }));
-  }, [kanban]);
+  }, [columns]);
   const [activeTask, setActiveTask] = useState<ActiveTaskProps | null>(null);
 
+  const detectSensor = () => (tabletMain ? TouchSensor : PointerSensor);
+
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { delay: 80, tolerance: 5 },
+    useSensor(detectSensor(), {
+      activationConstraint: { delay: 80, tolerance: 25 },
     })
   );
 
@@ -51,7 +57,7 @@ const Board: FC = () => {
 
     const taskId = active.id;
     const columnId = active.data.current?.columnId;
-    const task = kanban[columnId as columnId].find((t) => t.id === taskId);
+    const task = columns[columnId as columnId].find((t) => t.id === taskId);
 
     if (task) {
       setActiveTask({ id: task.id, content: task.content, columnId });
@@ -69,16 +75,21 @@ const Board: FC = () => {
     const activeId = active.id;
     const sourceColumn = active.data.current?.columnId;
     const overId = over.id;
-    const destinationColumn = over.data.current?.columnId;
+    const destinationColumn = over.data.current?.columnId || over.id;
 
-    // Find the indices of the active and over items
-    const sourceTasks = kanban[sourceColumn as columnId];
-    const destinationTasks = kanban[destinationColumn as columnId];
+    if (!sourceColumn || !destinationColumn) {
+      console.error('Invalid drag operation: Missing source or destination column.');
+      setActiveTask(null);
+      return;
+    }
+
+    const sourceTasks = columns[sourceColumn as columnId];
+    const destinationTasks = columns[destinationColumn as columnId];
     const oldIndex = sourceTasks.findIndex((t) => t.id === activeId);
     const newIndex =
-      overId === undefined
-        ? destinationTasks.length // Add to the end if dropped outside a Task
-        : destinationTasks.findIndex((t) => t.id === overId);
+      destinationTasks && destinationTasks.length > 0
+        ? destinationTasks.findIndex((t) => t.id === overId)
+        : 0;
 
     if (oldIndex === -1) return;
 
@@ -90,6 +101,8 @@ const Board: FC = () => {
         newIndex,
       })
     );
+
+    setActiveTask(null);
   };
 
   const handleDragOver = useDebouncedCallback((event: DragOverEvent) => {
@@ -103,11 +116,10 @@ const Board: FC = () => {
     const destinationColumn = over.data.current?.columnId;
 
     // Find the indices of the active and over items
-    const sourceTasks = kanban[sourceColumn as columnId];
-    const destinationTasks = kanban[destinationColumn as columnId];
+    const sourceTasks = columns[sourceColumn as columnId];
+    const destinationTasks = columns[destinationColumn as columnId];
     const oldIndex = sourceTasks.findIndex((t) => t.id === activeId);
     const newIndex = destinationTasks.findIndex((t) => t.id === overId);
-    console.log('🚀 ~ handleDragOver ~ destinationTasks:', destinationTasks, oldIndex, newIndex);
 
     if (oldIndex === -1) return;
     dispatch(
@@ -122,32 +134,34 @@ const Board: FC = () => {
 
   return (
     <div className={styles.board}>
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver}
-    >
-      {dragContext.map(({ columnId, tasks }) => (
-        <Suspense key={columnId} fallback={<div>Loading...</div>}>
-          <Column columnId={columnId} tasks={tasks} />
-        </Suspense>
-      ))}
-      {createPortal(
-        <DragOverlay>
-          {activeTask && (
-            <Suspense fallback={<div>Loading...</div>}>
-              <TaskCard
-                task={{ id: activeTask.id, content: activeTask.content }}
-                columnId={activeTask.columnId}
-              />
+      <Suspense fallback={<LoadingSpinner />}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragOver={handleDragOver}
+        >
+          {dragContext.map(({ columnId, tasks }) => (
+            <Suspense key={columnId} fallback={<LoadingSpinner />}>
+              <Column columnId={columnId} tasks={tasks} />
             </Suspense>
+          ))}
+          {createPortal(
+            <DragOverlay>
+              {activeTask && (
+                <Suspense fallback={<LoadingSpinner />}>
+                  <TaskCard
+                    task={{ id: activeTask.id, content: activeTask.content }}
+                    columnId={activeTask.columnId}
+                  />
+                </Suspense>
+              )}
+            </DragOverlay>,
+            document.body
           )}
-        </DragOverlay>,
-        document.body
-      )}
-    </DndContext>
+        </DndContext>
+      </Suspense>
     </div>
   );
 };

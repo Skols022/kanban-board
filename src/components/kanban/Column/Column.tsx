@@ -1,13 +1,14 @@
 import { ChangeEvent, FC, lazy, useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { useDispatch, useSelector } from 'react-redux';
 
-import styles from './Column.module.css';
+import { RootState } from '@/app/store';
 import { addTask } from '@/features/kanban/kanbanSlice';
-import { useDispatch } from 'react-redux';
 import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
 import Modal from '@/components/shared/Modal/Modal';
+import styles from './Column.module.css';
 
 const SortableContext = lazy(() =>
   import('@dnd-kit/sortable').then((module) => ({ default: module.SortableContext }))
@@ -20,10 +21,23 @@ interface ColumnProps {
 }
 const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
   const dispatch = useDispatch();
-  const { setNodeRef } = useDroppable({ id: columnId });
+  const { searchTerm } = useSelector((state: RootState) => state.kanban);
+  const { setNodeRef } = useDroppable({
+    id: columnId,
+    data: {
+      columnId,
+    },
+  });
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskContent, setNewTaskContent] = useState('');
-  const items = useMemo(() => tasks.map((task) => task.id), [tasks]);
+  const items = useMemo(() => {
+    if (!Array.isArray(tasks)) {
+      console.error(`Tasks is not an array for column: ${columnId}`, tasks);
+      return [];
+    }
+    if (!searchTerm) return tasks;
+    return tasks.filter((task) => task.content.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [tasks, searchTerm, columnId]);
 
   const handleAddTask = () => {
     if (newTaskContent.trim() !== '') {
@@ -50,7 +64,7 @@ const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
     <div className={styles.column}>
       <div className={styles.columnHeader}>
         <h2>
-          <span>{formatColumnName(columnId)}</span> <span>({tasks.length})</span>
+          <span>{formatColumnName(columnId)}</span> <span>({items.length})</span>
         </h2>
         <Button onClick={() => setIsAdding(true)}>+</Button>
       </div>
@@ -75,12 +89,12 @@ const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
             />
           </Modal>
         )}
-        {tasks.map((task) => (
+        {items.map((task) => (
           <SortableContext
             key={task.id}
             id={columnId}
             items={items}
-            strategy={verticalListSortingStrategy}
+            strategy={horizontalListSortingStrategy}
           >
             <TaskCard task={task} columnId={columnId} />
           </SortableContext>

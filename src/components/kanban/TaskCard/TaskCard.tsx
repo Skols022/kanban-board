@@ -27,7 +27,6 @@ const TaskCard: FC<TaskCardProps> = ({ task, columnId }) => {
 
   
   const handleEdit = () => {
-    console.log('EDITING:', isEditing);
     if (content.trim() !== task.content) {
       dispatch(editTask({ columnId, taskId: task.id, content }));
     }
@@ -58,6 +57,7 @@ const TaskCard: FC<TaskCardProps> = ({ task, columnId }) => {
     >
       {!isEditing && (
         <span className={styles.deleteButtonWrapper}>
+          <Button onClick={() => setIsEditing(true)}>Edit</Button>
           <Button onClick={handleDelete}>
             x
           </Button>

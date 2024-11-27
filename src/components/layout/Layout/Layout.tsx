@@ -7,7 +7,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Header />
-      <main className={styles.layout}>{children}</main>
+      <main className={styles.layout}>
+        <div className={styles.frame}>
+          <div />
+          <div />
+          <div />
+        </div>
+        {children}
+        </main>
     </>
   );
 };

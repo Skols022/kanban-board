@@ -1,18 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-type KanbanState = {
-  [key in columnId]: Task[];
+
+export type KanbanState = {
+  columns: {
+    [key in columnId]: Task[];
+  };
+} & {
+  searchTerm: string | undefined;
 };
 
 const initialState: KanbanState = {
-  todo: [
-    { id: 1, content: 'Review request for proposal' },
-    { id: 2, content: 'Develop BIM model of wind shear impact' },
-  ],
-  inProgress: [
-    { id: 3, content: 'Prepare for client meeting with Addisons' },
-    { id: 4, content: 'Addison client meeting Thursday 11 a.m.' },
-  ],
-  done: [{ id: 5, content: 'Write meeting minutes from client meeting' }],
+  columns: {
+    todo: [
+      { id: 1, content: 'Review request for proposal' },
+      { id: 2, content: 'Develop BIM model of wind shear impact' },
+    ],
+    inProgress: [
+      { id: 3, content: 'Prepare for client meeting with Addisons' },
+      { id: 4, content: 'Addison client meeting Thursday 11 a.m.' },
+    ],
+    done: [{ id: 5, content: 'Write meeting minutes from client meeting' }],
+  },
+  searchTerm: '',
 };
 
 const kanbanSlice = createSlice({
@@ -30,39 +38,38 @@ const kanbanSlice = createSlice({
     ) => {
       const { sourceColumn, destinationColumn, oldIndex, newIndex } = action.payload;
 
-      if (!state[sourceColumn] || !state[destinationColumn]) {
+      if (!state.columns[sourceColumn] || !state.columns[destinationColumn]) {
         console.error(
           `Invalid columns: source(${sourceColumn}), destination(${destinationColumn})`
         );
         return;
       }
 
-      const sourceTasks = state[sourceColumn];
-      const destinationTasks = state[destinationColumn];
+      const sourceTasks = state.columns[sourceColumn];
+      const destinationTasks = state.columns[destinationColumn];
 
-      // Handle cross-column movement
       if (sourceColumn !== destinationColumn) {
-        const [movedTask] = sourceTasks.splice(oldIndex, 1); // Remove from source column
-        destinationTasks.splice(newIndex, 0, movedTask); // Add to destination column
+        const [movedTask] = sourceTasks.splice(oldIndex, 1);
+        destinationTasks.splice(newIndex, 0, movedTask);
       } else {
-        // Reorder within the same column
-        const [movedTask] = sourceTasks.splice(oldIndex, 1); // Remove Task
-        sourceTasks.splice(newIndex, 0, movedTask); // Add at new index
+        const [movedTask] = sourceTasks.splice(oldIndex, 1);
+        sourceTasks.splice(newIndex, 0, movedTask);
       }
     },
     addTask: (state, action: PayloadAction<{ columnId: columnId; content: string }>) => {
       const { columnId, content } = action.payload;
-      console.log('🚀 ~ columnId:', typeof state[columnId].length, columnId);
-      const newTask = { id: state[columnId].length + 1, content };
-      state[columnId].push(newTask);
+      const id = Math.floor(Date.now() * Math.random());
+      const newTask = { id, content };
+
+      state.columns[columnId].push(newTask);
     },
     editTask: (
       state,
       action: PayloadAction<{ columnId: columnId; taskId: number; content: string }>
     ) => {
       const { columnId, taskId, content } = action.payload;
-      console.log('🚀 ~ editTask columnId:', columnId);
-      const task = state[columnId].find((t) => t.id === taskId);
+      const task = state.columns[columnId].find((t) => t.id === taskId);
+
       if (task) {
         task.content = content;
       }
@@ -70,15 +77,15 @@ const kanbanSlice = createSlice({
     deleteTask: (state, action: PayloadAction<{ columnId: columnId; taskId: number }>) => {
       const { columnId, taskId } = action.payload;
 
-      if (!state[columnId]) return;
+      if (!state.columns[columnId]) return;
 
-      // Filter out the task from the column
-      state[columnId] = state[columnId].filter(
-        (task) => task.id !== taskId
-      );
+      state.columns[columnId] = state.columns[columnId].filter((task) => task.id !== taskId);
+    },
+    searchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
     },
   },
 });
 
-export const { moveTask, addTask, editTask, deleteTask } = kanbanSlice.actions;
+export const { moveTask, addTask, editTask, deleteTask, searchTerm } = kanbanSlice.actions;
 export default kanbanSlice.reducer;

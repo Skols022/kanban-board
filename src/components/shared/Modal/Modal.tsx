@@ -23,7 +23,6 @@ const Modal: FC<ModalProps> = ({
   columnId,
 }) => {
   const [open, setOpen] = useState(defaultOpen);
-  console.log('🚀 ~ open:', open);
 
   const handleClose = () => {
     setOpen(false);

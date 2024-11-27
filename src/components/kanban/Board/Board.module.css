@@ -1,4 +1,10 @@
 .board {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.625rem;
+
+  @media (--tablet-main) {
+    flex-direction: column;
+  }
 }

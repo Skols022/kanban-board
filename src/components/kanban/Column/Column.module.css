@@ -1,6 +1,10 @@
 .column {
   flex: 1;
 
+  @media (--tablet-main) {
+    width: 100%;
+  }
+
   .columnHeader {
     height: 8.4375rem;
     padding: 2.8125rem 2rem 1rem;
@@ -26,8 +30,13 @@
   }
 
   .columnContent {
-    min-height: 80vh;
+    height: calc(100vh - 14.3125rem);
     padding: 1.6875rem 5.31255rem;
+    overflow-y: auto;
+
+    @media (--desktop-wide) {
+      padding: 1rem 1.5rem;
+    }
   }
 
   &:first-child {
