@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createTransform, PERSIST, persistReducer, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // Defaults to localStorage for web
+import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import kanbanReducer, { KanbanState } from '@/features/kanban/kanbanSlice';
 
