@@ -8,9 +8,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 20px;
-    padding: 8px;
-    z-index: 100000;
+    font-size: 1.25rem;
+    padding: 0.5rem;
   }
   
   .searchInput {
@@ -18,18 +17,14 @@
     right: 0;
     top: 50%;
     transform: translateY(-50%) translateX(100%);
-    width: 200px;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
-    pointer-events: none; /* Prevent interaction when hidden */
+    pointer-events: none;
   }
   
   .searchInput.visible {
     transform: translateY(-50%) translateX(0);
     opacity: 1;
-    pointer-events: all; /* Enable interaction when visible */
+    pointer-events: all;
   }
 }

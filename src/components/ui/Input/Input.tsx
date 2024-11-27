@@ -35,6 +35,7 @@ const Input = forwardRef<HTMLTextAreaElement | HTMLInputElement, InputProps>((
     value,
     placeholder,
     isTextArea,
+    className,
     ...props
   }: InputProps,
   ref: Ref<HTMLTextAreaElement | HTMLInputElement>
@@ -63,6 +64,7 @@ const Input = forwardRef<HTMLTextAreaElement | HTMLInputElement, InputProps>((
         type="text"
         value={value}
         placeholder={placeholder}
+        className={`${styles.input} ${className}`}
         {...rest}
       />
     );

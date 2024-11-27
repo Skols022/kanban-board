@@ -8,8 +8,8 @@
   gap: 1rem;
   background: var(--background);
   padding: 1rem 1.375rem 0.5rem;
-  margin-bottom: 0.625rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1.375rem;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.5);
   cursor: grab;
 
   @media (--tablet-main) {
