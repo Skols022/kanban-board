@@ -1,0 +1,14 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: #fff;
+  border: 1px solid transparent;
+  user-select: none;
+  cursor: pointer;
+}

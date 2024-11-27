@@ -15,7 +15,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
 
     /* Linting */
@@ -23,11 +23,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+    "noUncheckedSideEffectImports": true
   },
-  "include": [
-    "types.d.ts", 
-    "src/**/*.ts",
-    "src/**/*.tsx",
-  ]
+  "include": ["src/types/types.d.ts", "src/**/*.ts", "src/**/*.tsx"]
 }

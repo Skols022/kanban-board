@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-interface KanbanState {
-  [key: string]: Task[];
-}
+type KanbanState = {
+  [key in columnId]: Task[];
+};
 
 const initialState: KanbanState = {
   todo: [
-    { id: '1', content: 'Review request for proposal' },
-    { id: '2', content: 'Develop BIM model of wind shear impact' },
+    { id: 1, content: 'Review request for proposal' },
+    { id: 2, content: 'Develop BIM model of wind shear impact' },
   ],
   inProgress: [
-    { id: '3', content: 'Prepare for client meeting with Addisons' },
-    { id: '4', content: 'Addison client meeting Thursday 11 a.m.' },
+    { id: 3, content: 'Prepare for client meeting with Addisons' },
+    { id: 4, content: 'Addison client meeting Thursday 11 a.m.' },
   ],
-  done: [{ id: '5', content: 'Write meeting minutes from client meeting' }],
+  done: [{ id: 5, content: 'Write meeting minutes from client meeting' }],
 };
 
 const kanbanSlice = createSlice({
@@ -22,8 +22,8 @@ const kanbanSlice = createSlice({
     moveTask: (
       state,
       action: PayloadAction<{
-        sourceColumn: string;
-        destinationColumn: string;
+        sourceColumn: columnId;
+        destinationColumn: columnId;
         oldIndex: number;
         newIndex: number;
       }>
@@ -50,8 +50,35 @@ const kanbanSlice = createSlice({
         sourceTasks.splice(newIndex, 0, movedTask); // Add at new index
       }
     },
+    addTask: (state, action: PayloadAction<{ columnId: columnId; content: string }>) => {
+      const { columnId, content } = action.payload;
+      console.log('🚀 ~ columnId:', typeof state[columnId].length, columnId);
+      const newTask = { id: state[columnId].length + 1, content };
+      state[columnId].push(newTask);
+    },
+    editTask: (
+      state,
+      action: PayloadAction<{ columnId: columnId; taskId: number; content: string }>
+    ) => {
+      const { columnId, taskId, content } = action.payload;
+      console.log('🚀 ~ editTask columnId:', columnId);
+      const task = state[columnId].find((t) => t.id === taskId);
+      if (task) {
+        task.content = content;
+      }
+    },
+    deleteTask: (state, action: PayloadAction<{ columnId: columnId; taskId: number }>) => {
+      const { columnId, taskId } = action.payload;
+
+      if (!state[columnId]) return;
+
+      // Filter out the task from the column
+      state[columnId] = state[columnId].filter(
+        (task) => task.id !== taskId
+      );
+    },
   },
 });
 
-export const { moveTask } = kanbanSlice.actions;
+export const { moveTask, addTask, editTask, deleteTask } = kanbanSlice.actions;
 export default kanbanSlice.reducer;
