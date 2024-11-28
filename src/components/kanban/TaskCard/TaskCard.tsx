@@ -54,6 +54,7 @@ const TaskCard: FC<TaskCardProps> = ({ task, columnId }) => {
       {...attributes}
       {...(isEditing ? {} : listeners)}
       onDoubleClick={() => setIsEditing(true)}
+      data-testid={`task-${task.id}`}
     >
       {!isEditing && (
         <span className={styles.deleteButtonWrapper}>
@@ -76,7 +77,7 @@ const TaskCard: FC<TaskCardProps> = ({ task, columnId }) => {
           </div>
         </>
       ) : (
-        <p className={styles.content}>{task.content}</p>
+        <p className={styles.content} data-testid={`task-${task.id}`}>{task.content}</p>
       )}
     </div>
   );

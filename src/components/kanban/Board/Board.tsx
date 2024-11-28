@@ -120,8 +120,10 @@ const Board: FC = () => {
     const destinationTasks = columns[destinationColumn as columnId];
     const oldIndex = sourceTasks.findIndex((t) => t.id === activeId);
     const newIndex = destinationTasks.findIndex((t) => t.id === overId);
+    console.log("🚀 ~ handleDragOver ~ sourceTasks:", sourceTasks, destinationTasks)
 
     if (oldIndex === -1) return;
+    
     dispatch(
       moveTask({
         sourceColumn,
@@ -133,7 +135,7 @@ const Board: FC = () => {
   }, 100);
 
   return (
-    <div className={styles.board}>
+    <div className={styles.board} data-testid="dnd-context">
       <Suspense fallback={<LoadingSpinner />}>
         <DndContext
           sensors={sensors}

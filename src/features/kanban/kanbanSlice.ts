@@ -5,7 +5,7 @@ export type KanbanState = {
     [key in columnId]: Task[];
   };
 } & {
-  searchTerm: string | undefined;
+  searchTerm?: string | undefined;
 };
 
 const initialState: KanbanState = {

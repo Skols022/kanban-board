@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, lazy, useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/app/store';
@@ -19,6 +19,21 @@ interface ColumnProps {
   columnId: columnId;
   tasks: Task[];
 }
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const formatColumnName = (name: columnId | string) => {
+  switch (name) {
+    case 'todo':
+      return 'To Do';
+    case 'inProgress':
+      return 'In Progress';
+    case 'done':
+      return 'Done';
+    default:
+      return name;
+  }
+};
+
 const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
   const dispatch = useDispatch();
   const { searchTerm } = useSelector((state: RootState) => state.kanban);
@@ -47,21 +62,8 @@ const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
     }
   };
 
-  const formatColumnName = (name: columnId) => {
-    switch (name) {
-      case 'todo':
-        return 'To Do';
-      case 'inProgress':
-        return 'In Progress';
-      case 'done':
-        return 'Done';
-      default:
-        return name;
-    }
-  };
-
   return (
-    <div className={styles.column}>
+    <div className={styles.column} data-testid={`column-${columnId}`}>
       <div className={styles.columnHeader}>
         <h2>
           <span>{formatColumnName(columnId)}</span> <span>({items.length})</span>
@@ -86,6 +88,7 @@ const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
               isTextArea
               value={newTaskContent}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNewTaskContent(e.target.value)}
+              placeholder={`Enter task content for ${formatColumnName(columnId)}`}
             />
           </Modal>
         )}
@@ -94,7 +97,7 @@ const Column: FC<ColumnProps> = ({ columnId, tasks }) => {
             key={task.id}
             id={columnId}
             items={items}
-            strategy={horizontalListSortingStrategy}
+            strategy={verticalListSortingStrategy}
           >
             <TaskCard task={task} columnId={columnId} />
           </SortableContext>

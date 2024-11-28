@@ -34,14 +34,15 @@ const Modal: FC<ModalProps> = ({
   }
 
   return createPortal(
-    <div data-modal='' className={styles.modal}>
-      <div className={styles.backdrop} onClick={handleClose} />
+    <div className={styles.modal} data-testid='modal-content'>
+      <div className={styles.backdrop} onClick={handleClose} data-testid='backdrop' />
       <div className={styles.container}>
         <div
           className={styles.modalContent}
           style={{
             '--modal-background': columnId ? addCorrespondingBackground(columnId) : '#11131e',
           }}
+          data-testid='modalContent'
         >
           {(title || showClose) && (
             <header className={styles.header}>

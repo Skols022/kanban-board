@@ -11,10 +11,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className={styles.frame}>
           <div />
           <div />
-          <div />
         </div>
         {children}
         </main>
+        <footer className={styles.footer}></footer>
     </>
   );
 };

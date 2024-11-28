@@ -1,10 +1,15 @@
-import Board from './components/kanban/Board/Board';
+import { lazy, Suspense } from 'react';
 import Layout from './components/layout/Layout/Layout';
+import LoadingSpinner from './components/ui/LoadingSpinner/LoadingSpinner';
+
+const Board = lazy(() => import('@/components/kanban/Board/Board'));
 
 function App() {
   return (
     <Layout>
-      <Board />
+      <Suspense fallback={<LoadingSpinner />}>
+        <Board />
+      </Suspense>
     </Layout>
   );
 }

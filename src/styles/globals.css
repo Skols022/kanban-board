@@ -40,12 +40,24 @@ a {
 
 h1 {
   font-size: 2.25rem;
+
+  @media (--tablet-main) {
+    font-size: 1.75rem;
+  }
 }
 
 h2 {
   font-size: 2rem;
+
+  @media (--tablet-main) {
+    font-size: 1.5rem;
+  }
 }
 
 p {
   font-size: 1.75rem;
+
+  @media (--tablet-main) {
+    font-size: 1.25rem;
+  }
 }

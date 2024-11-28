@@ -26,10 +26,18 @@
       right: 2rem;
       top: 1.5rem;
       font-size: 3rem;
+
+      @media (--tablet-main) {
+        font-size: 2rem;
+        top: 2.5rem;
+      }
     }
   }
 
   .columnContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     height: calc(100vh - 14.3125rem);
     padding: 1.6875rem 5.31255rem;
     overflow-y: auto;
