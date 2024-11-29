@@ -10,15 +10,9 @@ export type KanbanState = {
 
 const initialState: KanbanState = {
   columns: {
-    todo: [
-      { id: 1, content: 'Review request for proposal' },
-      { id: 2, content: 'Develop BIM model of wind shear impact' },
-    ],
-    inProgress: [
-      { id: 3, content: 'Prepare for client meeting with Addisons' },
-      { id: 4, content: 'Addison client meeting Thursday 11 a.m.' },
-    ],
-    done: [{ id: 5, content: 'Write meeting minutes from client meeting' }],
+    todo: [],
+    inProgress: [],
+    done: [],
   },
   searchTerm: '',
 };

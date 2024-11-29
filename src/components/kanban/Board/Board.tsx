@@ -5,6 +5,7 @@ import {
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
+  MouseSensor,
   PointerSensor,
   TouchSensor,
   closestCorners,
@@ -49,7 +50,8 @@ const Board: FC = () => {
   const sensors = useSensors(
     useSensor(detectSensor(), {
       activationConstraint: { delay: 80, tolerance: 25 },
-    })
+    }),
+    useSensor(MouseSensor),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -120,10 +122,9 @@ const Board: FC = () => {
     const destinationTasks = columns[destinationColumn as columnId];
     const oldIndex = sourceTasks.findIndex((t) => t.id === activeId);
     const newIndex = destinationTasks.findIndex((t) => t.id === overId);
-    console.log("🚀 ~ handleDragOver ~ sourceTasks:", sourceTasks, destinationTasks)
 
     if (oldIndex === -1) return;
-    
+
     dispatch(
       moveTask({
         sourceColumn,

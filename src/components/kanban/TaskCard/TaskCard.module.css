@@ -1,6 +1,6 @@
 .task {
   position: relative;
-  max-width: 16.875rem;
+  width: 16.875rem;
   min-height: 13.625rem;
   max-height: 15.625rem;
   display: flex;
@@ -18,7 +18,7 @@
 
   @media (--tablet-main) {
     touch-action: none;
-    max-width: 11.875rem;
+    width: 11.875rem;
     min-height: 9.625rem;
     max-height: 11.625rem;
   }
