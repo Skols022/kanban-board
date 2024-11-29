@@ -31,7 +31,6 @@ const kanbanSlice = createSlice({
       }>
     ) => {
       const { sourceColumn, destinationColumn, oldIndex, newIndex } = action.payload;
-      console.log("🚀 ~ sourceColumn:", sourceColumn)
 
       if (!state.columns[sourceColumn] || !state.columns[destinationColumn]) {
         console.error(
